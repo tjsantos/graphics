@@ -1,0 +1,31 @@
+
+body {
+    padding: 100px;
+    width: 1024px;
+    margin: auto;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.grid-2-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5em;
+}
+.grid-2-2 > div {
+    display: grid;
+    align-items: center;
+}
+.grid-2-2 figure {
+    margin: 0;
+}
