@@ -10,9 +10,10 @@
 
 <body>
 
-<h1 class="text-center">Rasterizer Project</h1>
-
-<br><br>
+<header class="text-center">
+  <h1>Rasterizer Project</h1>
+  <div class="logo"></div>
+</header>
 
 <h2 class="text-center">Overview</h2>
 <!--<p>-->
@@ -20,56 +21,126 @@
 <!--  Think about what you've built as a whole.-->
 <!--  Share your thoughts on what interesting things you've learned from completing the project.-->
 <!--</p>-->
+<p>
+  This project is a simple rasterizer that can take SVG files and render them to the screen.
+  It explores the issues one faces when drawing images to the screen, such as performance and aliasing,
+  and demonstrates a variety of anti-aliasing techniques that can display
+  faithful representations of the desired image while maintaining high performance.
+  The rasterizer includes support for hierarchical transforms, texture mapping, and anti-aliasing
+  with supersampling and trilinear filtering using mipmaps.
+</p>
 
 <h2 class="text-center">Section I: Rasterization</h2>
-
+<p>
+  <a href="https://en.wikipedia.org/wiki/Rasterisation" target="_blank">
+    Rasterization
+  </a>
+  is the process of taking image data represented as geometric shapes and converting it into
+  a series of pixel data that can more directly represent the image on a display.
+  We'll start with the most basic polygon, the triangle.
+</p>
 <h3 class="text-center">Part 1: Rasterizing single-color triangles</h3>
+<p>
+  Triangles are a fundamental modeling primitive in computer graphics.
+  They can be used to break up more complex polygons and easily interpolate desired image data like color (see Part 4).
+</p>
+<p>
+  A single-color triangle can be represented with 3 (x, y) coordinates and a color, typically in
+  <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb" target="_blank">
+    RGB format</a>.
+</p>
+<div class="grid-2 text-center">
+  <div>
+    <figure>
+      <img src="images/part1-triangle.png" alt="triangles">
+      <figcaption>
+        Triangles rendered by simply sampling 1 point per pixel.
+        Notice the staircase pattern, or "jaggies" on the triangle pixels.
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="images/part1-triangle-zoom.png" alt="triangles zoomed in">
+      <figcaption>An example of aliasing where the rendered pixels don't properly connect the triangle.</figcaption>
+    </figure>
+  </div>
+</div>
 
+
+
+<h3 class="text-center">Part 2: Antialiasing triangles</h3>
+<img src="images/part2-triangles-1-16.png" alt="zoom 1">
+<img src="images/part2-triangles-2-16.png" alt="zoom 2">
+<img src="images/part2-triangles-3-16.png" alt="zoom 3">
+
+<h3 class="text-center">Part 3: Transforms</h3>
+<div class="grid-2 text-center">
+  <div>
+    <figure>
+      <img src="images/part3-robot.svg" alt="triangles">
+      <figcaption>
+        Robot built using svg transform stacks.
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="images/part3-my-robot.svg" alt="triangles zoomed in">
+      <figcaption>Transforms applied to one component will transform everything in its hierarchy.</figcaption>
+    </figure>
+  </div>
+</div>
+<h2 class="text-center">Section II: Sampling</h2>
+
+<h3 class="text-center">Part 4: Barycentric coordinates</h3>
+<img src="images/part4-color-wheel.png" alt="color wheel">
+
+<h3 class="text-center">Part 5: "Pixel sampling" for texture mapping</h3>
+<img src="images/nearest.png" alt="nearest">
+<p>Nearest neighbor sampling.</p>
+<br>
+<img src="images/bilinear.png" alt="bilinear">
+<p>Bilinear sampling.</p>
+
+<h3 class="text-center">Part 6: "Level sampling" with mipmaps for texture mapping</h3>
+<img src="images/trilinear.png" alt="trilinear">
+<p>Trilinear sampling with mipmaps.</p>
+
+<h2 class="text-center">Section III: Art</h2>
+
+<h3 class="text-center">Part 7: Something interesting!</h3>
+<p>
+  Placeholder images
+</p>
 <div class="text-center">
-  <div class="grid-2-2">
+  <div class="grid-2">
     <div>
       <figure>
         <img src="images/image1.png" width="400"/>
-        <figcaption>Caption goes here.</figcaption>
+        <figcaption>Berkeley</figcaption>
       </figure>
     </div>
     <div>
       <figure>
         <img src="images/image2.png" width="400"/>
-        <figcaption>Caption goes here.</figcaption>
+        <figcaption>World Map</figcaption>
       </figure>
     </div>
     <div>
       <figure>
         <img src="images/image3.png" width="400"/>
-        <figcaption>Caption goes here.</figcaption>
+        <figcaption>Campanile</figcaption>
       </figure>
     </div>
     <div>
       <figure>
         <img src="images/image4.png" width="400"/>
-        <figcaption>Caption goes here.</figcaption>
+        <figcaption>Parrot</figcaption>
       </figure>
     </div>
   </div>
 </div>
-
-
-<h3 class="text-center">Part 2: Antialiasing triangles</h3>
-
-<h3 class="text-center">Part 3: Transforms</h3>
-
-<h2 class="text-center">Section II: Sampling</h2>
-
-<h3 class="text-center">Part 4: Barycentric coordinates</h3>
-
-<h3 class="text-center">Part 5: "Pixel sampling" for texture mapping</h3>
-
-<h3 class="text-center">Part 6: "Level sampling" with mipmaps for texture mapping</h3>
-
-<h2 class="text-center">Section III: Art</h2>
-
-<h3 class="text-center">Part 7: Something interesting!</h3>
 
 </body>
 </html>

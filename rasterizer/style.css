@@ -7,25 +7,46 @@ body {
     font-weight: 300;
     font-family: 'Open Sans', sans-serif;
     color: #121212;
+    line-height: 1.5;
 }
 
 h1, h2, h3, h4 {
     font-family: 'Source Sans Pro', sans-serif;
 }
 
+img {
+    border: 1px solid black;
+}
+
+.logo {
+    display: inline-block;
+    background-image: url("images/svg-sphere.png");
+    background-position: center;
+    background-size: 200%;
+    width: 400px;
+    height: 400px;
+}
+
 .text-center {
     text-align: center;
 }
 
-.grid-2-2 {
+.grid-2 {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.5em;
 }
-.grid-2-2 > div {
+.grid-2 > div {
     display: grid;
-    align-items: center;
+    /*align-items: baseline;*/
 }
-.grid-2-2 figure {
+.grid-2 figure {
     margin: 0;
+}
+.grid-2 img {
+    width: 100%;
+}
+
+.d-flex {
+    display: flex;
 }
