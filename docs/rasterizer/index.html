@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rasterizer</title>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
-  <link rel="stylesheet" href="modern-normalize.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../modern-normalize.css">
+  <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
@@ -15,6 +16,7 @@
   <div class="logo"></div>
 </header>
 
+<main class="container">
 <h2 class="text-center">Overview</h2>
 <!--<p>-->
 <!--  Give a high-level overview of what you implemented in this project.-->
@@ -23,7 +25,7 @@
 <!--</p>-->
 <p>
   This project is a simple rasterizer that can take SVG files and render them to the screen.
-  It explores the issues one faces when drawing images to the screen, such as performance and aliasing,
+  It explores the issues one faces in rendering, such as performance and aliasing,
   and demonstrates a variety of anti-aliasing techniques that can display
   faithful representations of the desired image while maintaining high performance.
   The rasterizer includes support for hierarchical transforms, texture mapping, and anti-aliasing
@@ -33,8 +35,7 @@
 <h2 class="text-center">Section I: Rasterization</h2>
 <p>
   <a href="https://en.wikipedia.org/wiki/Rasterisation" target="_blank">
-    Rasterization
-  </a>
+    Rasterization</a>
   is the process of taking image data represented as geometric shapes and converting it into
   a series of pixel data that can more directly represent the image on a display.
   We'll start with the most basic polygon, the triangle.
@@ -49,7 +50,7 @@
   <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb" target="_blank">
     RGB format</a>.
 </p>
-<div class="grid-2 text-center">
+<div class="image-grid-2 text-center">
   <div>
     <figure>
       <img src="images/part1-triangle.png" alt="triangles">
@@ -67,15 +68,27 @@
   </div>
 </div>
 
-
-
-<h3 class="text-center">Part 2: Antialiasing triangles</h3>
-<img src="images/part2-triangles-1-16.png" alt="zoom 1">
-<img src="images/part2-triangles-2-16.png" alt="zoom 2">
-<img src="images/part2-triangles-3-16.png" alt="zoom 3">
+<h3 class="text-center">Part 2: Anti-aliasing triangles</h3>
+<div class="image-grid-2 text-center">
+  <div>
+    <figure>
+      <img src="images/part2-triangles-1-16.png" alt="zoom 1">
+      <figcaption>
+        Anti-aliased triangles rendered by supersampling 16 points per pixel.
+        The "jaggies" on the triangle pixels have been smoothed out.
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="images/part2-triangles-2-16.png" alt="zoom 2">
+      <figcaption>Antialiasing via supersampling properly connects the triangle.</figcaption>
+    </figure>
+  </div>
+</div>
 
 <h3 class="text-center">Part 3: Transforms</h3>
-<div class="grid-2 text-center">
+<div class="image-grid-2 text-center">
   <div>
     <figure>
       <img src="images/part3-robot.svg" alt="triangles">
@@ -94,18 +107,91 @@
 <h2 class="text-center">Section II: Sampling</h2>
 
 <h3 class="text-center">Part 4: Barycentric coordinates</h3>
-<img src="images/part4-color-wheel.png" alt="color wheel">
+<figure class="text-center">
+  <img src="images/part4-color-wheel.png" alt="color wheel">
+  <figcaption>
+    Linear interpolation using barycentric coordinates, given a single color per triangle vertex.
+  </figcaption>
+</figure>
 
 <h3 class="text-center">Part 5: "Pixel sampling" for texture mapping</h3>
-<img src="images/nearest.png" alt="nearest">
-<p>Nearest neighbor sampling.</p>
+
+<figure class="text-center">
+  <img src="images/nearest.png" alt="nearest">
+  <figcaption>
+    Nearest neighbor sampling.
+  </figcaption>
+</figure>
 <br>
-<img src="images/bilinear.png" alt="bilinear">
-<p>Bilinear sampling.</p>
+
+<figure class="text-center">
+  <img src="images/bilinear.png" alt="bilinear">
+  <figcaption>
+    Bilinear sampling.
+  </figcaption>
+</figure>
 
 <h3 class="text-center">Part 6: "Level sampling" with mipmaps for texture mapping</h3>
-<img src="images/trilinear.png" alt="trilinear">
-<p>Trilinear sampling with mipmaps.</p>
+<div class="image-grid-2 text-center">
+  <div>
+    <figure>
+      <img src="images/part6-original.png" alt="campanile">
+      <figcaption>
+        Original image.
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="images/part6-aliased.png" alt="campanile, texture-mapped with aliasing">
+      <figcaption>
+        Warped image using texture mapping without anti-aliasing.
+      </figcaption>
+    </figure>
+  </div>
+</div>
+<br>
+
+<div class="image-grid-2 text-center">
+<!--  <div>-->
+<!--    <figure>-->
+<!--      <img src="images/part6-mipmap-levels-1.png" alt="mipmap level visualization 1">-->
+<!--      <figcaption>-->
+<!--      </figcaption>-->
+<!--    </figure>-->
+<!--  </div>-->
+  <div>
+    <figure>
+      <img src="images/part6-mipmap-levels-2.png" alt="mipmap level visualization 2">
+      <figcaption>
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="images/part6-mipmap-levels-3.png" alt="mipmap level visualization 3">
+      <figcaption>
+      </figcaption>
+    </figure>
+  </div>
+<!--  <div>-->
+<!--    <figure>-->
+<!--      <img src="images/part6-mipmap-levels-4.png" alt="mipmap level visualization 4">-->
+<!--      <figcaption>-->
+<!--      </figcaption>-->
+<!--    </figure>-->
+<!--  </div>-->
+</div>
+<p>Visualization of mipmap levels.
+  The brighter, cyan colored areas use increasingly downsampled versions of the original texture.
+  As we zoom in and out, the levels change.
+</p>
+<br>
+
+<figure class="text-center">
+  <img src="images/part6-trilinear.png" alt="trilinear">
+  <figcaption>Trilinear sampling with mipmaps.</figcaption>
+</figure>
 
 <h2 class="text-center">Section III: Art</h2>
 
@@ -114,7 +200,7 @@
   Placeholder images
 </p>
 <div class="text-center">
-  <div class="grid-2">
+  <div class="image-grid-2">
     <div>
       <figure>
         <img src="images/image1.png" width="400"/>
@@ -141,6 +227,7 @@
     </div>
   </div>
 </div>
+</main>
 
 </body>
 </html>
