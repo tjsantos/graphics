@@ -1,5 +1,5 @@
 # graphics
-computer graphics and game dev
+computer graphics
 
 ## [Rasterizer](https://tjsantos.github.io/graphics/rasterizer/)
 
