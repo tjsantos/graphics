@@ -43,12 +43,29 @@
 <h3 class="text-center">Part 1: Rasterizing single-color triangles</h3>
 <p>
   Triangles are a fundamental modeling primitive in computer graphics.
-  They can be used to break up more complex polygons and easily interpolate desired image data like color (see Part 4).
+  They can be used to break up more complex polygons and easily interpolate desired image data like color
+  (as we'll see Part 4).
 </p>
 <p>
   A single-color triangle can be represented with 3 (x, y) coordinates and a color, typically in
   <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb" target="_blank">
     RGB format</a>.
+  Given the coordinates, we can run point-in-triangle tests on each pixel location to see whether
+  the pixel belongs inside the triangle. If it does, we can set the pixel to the specified color
+  to be displayed on the screen.
+</p>
+<p>
+  A simple but effective optimization is to not test <em>every</em> pixel on the screen, but rather just the pixels in
+  the bounding box of the triangle. We can do this by getting the minimum and maximum x and y coordinates
+  of the triangle and simply traversing the pixel grid bounded by those values.
+</p>
+<p>
+  With this naive implementation of sampling 1 point per pixel, we get the images below. Notice that the
+  rendered triangles noticeably fall short of an accurate representation, which would ideally have
+  fully connected triangles with smooth sides.
+  This is a phenomenon known as
+  <a href="https://en.wikipedia.org/wiki/Aliasing" target="_blank">
+    aliasing</a>.
 </p>
 <div class="image-grid-2 text-center">
   <div>
@@ -69,6 +86,14 @@
 </div>
 
 <h3 class="text-center">Part 2: Anti-aliasing triangles</h3>
+<p>
+  Anti-aliasing refers to the techniques used to decrease the inaccuracies or artifacts due to aliasing.
+  One way to anti-alias our triangle renders is a technique called supersampling. In supersampling,
+  we take multiple samples per pixel and then average them out to get the final pixel color value to display.
+  Since a pixel may only partly overlap our ideal triangles, we can set the pixel to be an appropriate blend
+  of the triangle color and background color. This way, we can smooth out the edges with a more gradual
+  change of color at pixel resolution.
+</p>
 <div class="image-grid-2 text-center">
   <div>
     <figure>
@@ -88,6 +113,14 @@
 </div>
 
 <h3 class="text-center">Part 3: Transforms</h3>
+<p>
+  Given our basic shapes, we are able to compose them to form more complex objects. One example of this
+  is to specify object positions relative to parent objects using hierarchical transforms.
+  Doing it in this manner makes it easy to manipulate the object. For example, to make the robot
+  do a lively gesture in the figures below,
+  we only need to specify the movements of the upper arm or leg instead of directly specifying the movement
+  of every object contained by the limbs.
+</p>
 <div class="image-grid-2 text-center">
   <div>
     <figure>
@@ -107,12 +140,42 @@
 <h2 class="text-center">Section II: Sampling</h2>
 
 <h3 class="text-center">Part 4: Barycentric coordinates</h3>
-<figure class="text-center">
-  <img src="images/part4-color-wheel.png" alt="color wheel">
-  <figcaption>
-    Linear interpolation using barycentric coordinates, given a single color per triangle vertex.
-  </figcaption>
-</figure>
+<p>
+  Moving beyond single color triangles, we can make use of barycentric coordinates to interpolate data
+  across triangle vertexes. The barycentric coordinate system allows us to
+  assign weights to each vertex relative to a given position on the triangle.
+</p>
+<p>
+  For example, if we label
+  our triangle vertexes A, B, and C with corresponding barycentric coordinates (a, b, c), the coordinate
+  (1, 0, 0) would correspond to the exact point A with weight 1, while the other points B and C have weight 0.
+  If we move to the "center" of the triangle, we'd have coordinates (1/3, 1/3, 1/3) with each triangle vertex
+  A, B, and C weighted equally.
+</p>
+<p>
+  As we move around the triangle, we can appropriately weight the triangle
+  vertex colors using barycentric coordinates to get a sensible color value at a given position, resulting
+  in a smooth interpolation across the entire triangle.
+</p>
+<div class="image-grid-2 text-center">
+  <div>
+    <figure>
+      <img src="images/part4-triangle.png" alt="interpolated triangle">
+      <figcaption>
+        Linear interpolation using barycentric coordinates, given a single color per triangle vertex.
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="images/part4-color-wheel.png" alt="color wheel">
+      <figcaption>
+        A smoothly interpolated color wheel consisting of smoothly interpolated triangles.
+      </figcaption>
+    </figure>
+  </div>
+</div>
+
 
 <h3 class="text-center">Part 5: "Pixel sampling" for texture mapping</h3>
 
@@ -193,40 +256,40 @@
   <figcaption>Trilinear sampling with mipmaps.</figcaption>
 </figure>
 
-<h2 class="text-center">Section III: Art</h2>
+<!--<h2 class="text-center">Section III: Art</h2>-->
 
-<h3 class="text-center">Part 7: Something interesting!</h3>
-<p>
-  Placeholder images
-</p>
-<div class="text-center">
-  <div class="image-grid-2">
-    <div>
-      <figure>
-        <img src="images/image1.png" width="400"/>
-        <figcaption>Berkeley</figcaption>
-      </figure>
-    </div>
-    <div>
-      <figure>
-        <img src="images/image2.png" width="400"/>
-        <figcaption>World Map</figcaption>
-      </figure>
-    </div>
-    <div>
-      <figure>
-        <img src="images/image3.png" width="400"/>
-        <figcaption>Campanile</figcaption>
-      </figure>
-    </div>
-    <div>
-      <figure>
-        <img src="images/image4.png" width="400"/>
-        <figcaption>Parrot</figcaption>
-      </figure>
-    </div>
-  </div>
-</div>
+<!--<h3 class="text-center">Part 7: Something interesting!</h3>-->
+<!--<p>-->
+<!--  Placeholder images-->
+<!--</p>-->
+<!--<div class="text-center">-->
+<!--  <div class="image-grid-2">-->
+<!--    <div>-->
+<!--      <figure>-->
+<!--        <img src="images/image1.png" width="400"/>-->
+<!--        <figcaption>Berkeley</figcaption>-->
+<!--      </figure>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--      <figure>-->
+<!--        <img src="images/image2.png" width="400"/>-->
+<!--        <figcaption>World Map</figcaption>-->
+<!--      </figure>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--      <figure>-->
+<!--        <img src="images/image3.png" width="400"/>-->
+<!--        <figcaption>Campanile</figcaption>-->
+<!--      </figure>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--      <figure>-->
+<!--        <img src="images/image4.png" width="400"/>-->
+<!--        <figcaption>Parrot</figcaption>-->
+<!--      </figure>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 </main>
 
 </body>
