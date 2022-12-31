@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ray Tracer</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+  <link rel="stylesheet" href="../modern-normalize.css">
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+<main class="container">
+<header class="text-center ungutter">
+  <h1>Ray Tracer</h1>
+  <img
+    src="./images/ray-tracer-bunny-logo.jpg"
+    alt="Ray traced bunny in Cornell box with direct illumination progressive global illumination"
+  >
+</header>
+<h2 class="text-center">Overview</h2>
+<p>
+  This project implements a physically-based renderer using the well-known technique
+  of ray tracing. More specifically, it uses path tracing to implement global illumination
+  for more realistic lighting in 3D renderings. Furthermore, this ray tracer is optimized for
+  speed and quality by using a Bounding Volume Hierarchy (BVH) as an acceleration structure and
+  by using adaptive sampling as a noise reduction technique. Overall, it can produce quality
+  renderings of 3D scenes in reasonable amounts of time. Some sample renderings are presented below,
+  as well as explanations of the techniques and optimizations to make it all work.
+</p>
+
+<h2 class="text-center">Part 1: Ray Generation and Intersection</h2>
+<p>
+  Ray tracing works by emulating the way light travels in the real world--as photons originating
+  from light sources and bouncing off various objects until it reaches your eyes. In practice,
+  this is done in reverse, tracing the path light takes by starting from the eyes and looking
+  in some direction at some object that reflects light from a light source. Thus, the ray
+  tracer starts from a given camera position and view direction, generates appropriate viewing
+  rays for each pixel in the image, and figure's out the pixel's color based on the object
+  that the ray hit and its position/orientation relative to the scene's lighting.
+</p>
+<p>
+  Let us first approach the ray generation. We start with an image that we want to create
+  in screen space coordinates, i.e. 800 x 600 pixels from a particular viewpoint. Samples are
+  generated for each pixel by generating rays from the camera to the image plane pixel and
+  transforming to world coordinates, giving us a parametric equation for the ray: o + td.
+</p>
+<p>
+  Next, we want to figure out which object the ray hits. We'll explore intersections with two
+  types of geometries: triangles and spheres.
+</p>
+<p>
+  <a href="https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm" target="_blank">
+    Möller–Trumbore intersection algorithm</a>
+</p>
+<!--<pre>a^2 + b^2 = c^2</pre>-->
+<p>
+  With the object intersection information, we can do a lighting and color calculation for the
+  pixels to accurately represent what our eyes should see. For now, we can color based off the
+  surface normals at the intersection to observe that our implementation of ray generation
+  and object intersection works as expected.
+</p>
+<div class="image-grid-3 text-center">
+  <div>
+    <figure>
+      <img src="./images/p1-CBspheres.png" alt="Ray traced spheres in a Cornell box.">
+      <figcaption>
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="./images/p1-cow.png" alt="Ray traced spheres in a Cornell box.">
+      <figcaption>
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="./images/p1-teapot.png" alt="Ray traced spheres in a Cornell box.">
+      <figcaption>
+      </figcaption>
+    </figure>
+  </div>
+</div>
+
+<h2 class="text-center">Part 2: Bounding Volume Hierarchy</h2>
+
+<h2 class="text-center">Part 3: Direct Illumination</h2>
+
+<h2 class="text-center">Part 4: Global Illumination</h2>
+
+<h2 class="text-center">Part 5: Adaptive Sampling</h2>
+
+
+</main>
+
+</body>
+</html>
