@@ -42,18 +42,61 @@
 <p>
   Let us first approach the ray generation. We start with an image that we want to create
   in screen space coordinates, i.e. 800 x 600 pixels from a particular viewpoint. Samples are
-  generated for each pixel by generating rays from the camera to the image plane pixel and
-  transforming to world coordinates, giving us a parametric equation for the ray: o + td.
+  generated for each pixel by generating rays from the camera to the image view plane pixel and
+  transforming to world coordinates, giving us a parametric equation for the ray,
+  <code>r(t) = o + td</code>,
+  where <code>o</code> is where the ray originates, <code>d</code> is the direction the ray
+  travels, and <code>t</code> is a parameter that varies to make <code>r(t)</code> represent
+  any position on the ray.
 </p>
 <p>
   Next, we want to figure out which object the ray hits. We'll explore intersections with two
   types of geometries: triangles and spheres.
 </p>
 <p>
-  <a href="https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm" target="_blank">
-    Möller–Trumbore intersection algorithm</a>
+  We can figure out if the ray hits a triangle by calculating the barycentric coordinates of
+  the intersection point with the plane containing the triangle. This can be done with the
+  equation <code>o + td = (1 - u - v)p1 + u*p2 + v*p3</code>, where <code>p1, p2</code> and
+  <code>p3</code> are the triangle points and <code>u, v, (1 - u - v)</code> are barycentric
+  coordinates. This equation can be rearranged to find the unknown values (t, u, v)
+  for the intersection:
 </p>
-<!--<pre>a^2 + b^2 = c^2</pre>-->
+<pre>
+  td + u(p1 - p2) + v(p1 - p3) = p1 - o,
+</pre>
+<p>
+  or in matrix-vector form,
+</p>
+<pre>
+  [d, (p1 - p2), (p1 - p3)] * [t; u; v] = [p1 - o].
+</pre>
+<p>
+  This can be solved with basic linear algebra techniques, but a particularly efficient approach
+  is to use the
+  <a href="https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm" target="_blank">
+    Möller–Trumbore intersection algorithm</a>.
+  We can verify that the equation is solvable and has a valid <code>t > 0</code> and
+  valid barycentric coordinates <code>u >= 0, v >= 0, (1 - u - v) >= 0</code> that land inside
+  the triangle to determine triangle intersection.
+</p>
+<p>
+  To determine intersection with spheres, we substitute the ray position into the sphere equation
+  and solve for <code>t</code>.
+</p>
+<pre>
+  |(o + td - c)|^2 - R^2 = 0
+</pre>
+<p>
+  Here, <code>c</code> is the sphere center, <code>R</code> is the sphere radius, and
+  <code>o + td</code> is a point on the sphere when the equation holds. Expanding this
+  out, we get a quadratic equation for <code>t</code> (the "." here means dot product).
+</p>
+<pre>
+  (d . d)t^2 + (2(o - c) . d)t + ((o - c) . (o - c) - R^2) = 0
+</pre>
+<p>
+  If we can solve for a valid <code>t > 0</code>, we have ray intersection with the sphere.
+</p>
 <p>
   With the object intersection information, we can do a lighting and color calculation for the
   pixels to accurately represent what our eyes should see. For now, we can color based off the
