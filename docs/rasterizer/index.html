@@ -28,8 +28,9 @@
   It explores the issues one faces in rendering, such as performance and aliasing,
   and demonstrates a variety of anti-aliasing techniques that can display
   faithful representations of the desired image while maintaining high performance.
-  The rasterizer includes support for hierarchical transforms, texture mapping, and anti-aliasing
-  with supersampling and trilinear filtering using mipmaps.
+  The rasterizer includes support for hierarchical transforms, texture mapping,
+  and anti-aliasing by supersampling, nearest-neighbor sampling, bilinear filtering,
+  and trilinear filtering using mipmaps.
 </p>
 
 <h2 class="text-center">Section I: Rasterization</h2>
@@ -43,11 +44,12 @@
 <h3 class="text-center">Part 1: Rasterizing single-color triangles</h3>
 <p>
   Triangles are a fundamental modeling primitive in computer graphics.
-  They can be used to break up more complex polygons and easily interpolate desired image data like color
-  (as we'll see Part 4).
+  They can be used to break up more complex polygons and easily interpolate desired image data
+  like color.
 </p>
 <p>
-  A single-color triangle can be represented with 3 (x, y) coordinates and a color, typically in
+  A single-color triangle can be represented with 3 <code>(x,y)</code> coordinates and a color,
+  typically in
   <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb" target="_blank">
     RGB format</a>.
   Given the coordinates, we can run point-in-triangle tests on each pixel location to see whether
@@ -55,13 +57,14 @@
   to be displayed on the screen.
 </p>
 <p>
-  A simple but effective optimization is to not test <em>every</em> pixel on the screen, but rather just the pixels in
-  the bounding box of the triangle. We can do this by getting the minimum and maximum x and y coordinates
-  of the triangle and simply traversing the pixel grid bounded by those values.
+  A simple but effective optimization is to not test <em>every</em> pixel on the screen, but rather
+  just the pixels in the bounding box of the triangle. We can do this by getting the minimum and
+  maximum <code>x</code> and <code>y</code> coordinates of the triangle and simply traversing the
+  pixel grid bounded by those values.
 </p>
 <p>
   With this naive implementation of sampling 1 point per pixel, we get the images below. Notice that the
-  rendered triangles noticeably fall short of an accurate representation, which would ideally have
+  rendered triangles fall noticeably short of an accurate representation, which would ideally have
   fully connected triangles with smooth sides.
   This is a phenomenon known as
   <a href="https://en.wikipedia.org/wiki/Aliasing" target="_blank">
@@ -208,7 +211,7 @@
     <figure>
       <img src="images/part6-aliased.png" alt="campanile, texture-mapped with aliasing">
       <figcaption>
-        Warped image using texture mapping without anti-aliasing.
+        Warped image using texture mapping.
       </figcaption>
     </figure>
   </div>
@@ -227,6 +230,7 @@
     <figure>
       <img src="images/part6-mipmap-levels-2.png" alt="mipmap level visualization 2">
       <figcaption>
+        Zoomed out.
       </figcaption>
     </figure>
   </div>
@@ -234,6 +238,7 @@
     <figure>
       <img src="images/part6-mipmap-levels-3.png" alt="mipmap level visualization 3">
       <figcaption>
+        Zoomed in.
       </figcaption>
     </figure>
   </div>
@@ -247,7 +252,8 @@
 </div>
 <p>Visualization of mipmap levels.
   The brighter, cyan colored areas use increasingly downsampled versions of the original texture.
-  As we zoom in and out, the levels change.
+  This matches our expectation that the enlarged corners require more detail than along the
+  shrinking diagonal. As we zoom in and out, the levels change.
 </p>
 <br>
 
