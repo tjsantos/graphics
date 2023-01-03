@@ -76,3 +76,9 @@ strong {
 .d-flex {
     display: flex;
 }
+.mx-auto {
+    margin-inline: auto;
+}
+.border-spacing-4 {
+    border-spacing: 1rem;
+}

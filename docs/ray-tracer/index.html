@@ -77,11 +77,11 @@
     Möller–Trumbore intersection algorithm</a>.
   We can verify that the equation is solvable and has a valid <code>t > 0</code> and
   valid barycentric coordinates <code>u >= 0, v >= 0, (1 - u - v) >= 0</code> that land inside
-  the triangle to determine triangle intersection.
+  the triangle to determine triangle intersection, and we are done!
 </p>
 <p>
-  To determine intersection with spheres, we substitute the ray position into the sphere equation
-  and solve for <code>t</code>.
+  Now for spheres. To determine intersection here, we can substitute the ray position into the
+  sphere equation and solve for <code>t</code>.
 </p>
 <pre>
   |(o + td - c)|^2 - R^2 = 0
@@ -89,19 +89,19 @@
 <p>
   Here, <code>c</code> is the sphere center, <code>R</code> is the sphere radius, and
   <code>o + td</code> is a point on the sphere when the equation holds. Expanding this
-  out, we get a quadratic equation for <code>t</code> (the "." here means dot product).
+  out, we get a quadratic equation for <code>t</code> (the "." here means dot product):
 </p>
 <pre>
-  (d . d)t^2 + (2(o - c) . d)t + ((o - c) . (o - c) - R^2) = 0
+  (d . d)t^2 + (2(o - c) . d)t + ((o - c) . (o - c) - R^2) = 0.
 </pre>
 <p>
   If we can solve for a valid <code>t > 0</code>, we have ray intersection with the sphere.
 </p>
 <p>
-  With the object intersection information, we can do a lighting and color calculation for the
-  pixels to accurately represent what our eyes should see. For now, we can color based off the
-  surface normals at the intersection to observe that our implementation of ray generation
-  and object intersection works as expected.
+  Once we have the object intersection information, we can do a lighting and color calculation
+  for the pixels to accurately represent what our eyes should see. For now, we can use a debug
+  color based off the surface normals at the intersection to observe that our implementation of
+  ray generation and object intersection works as expected.
 </p>
 <div class="image-grid-3 text-center">
   <div>
@@ -113,14 +113,14 @@
   </div>
   <div>
     <figure>
-      <img src="./images/p1-cow.png" alt="Ray traced spheres in a Cornell box.">
+      <img src="./images/p1-cow.png" alt="Ray traced cow.">
       <figcaption>
       </figcaption>
     </figure>
   </div>
   <div>
     <figure>
-      <img src="./images/p1-teapot.png" alt="Ray traced spheres in a Cornell box.">
+      <img src="./images/p1-teapot.png" alt="Ray traced teapot.">
       <figcaption>
       </figcaption>
     </figure>
@@ -128,6 +128,127 @@
 </div>
 
 <h2 class="text-center">Part 2: Bounding Volume Hierarchy</h2>
+<p>
+  Though we now have the methods to compute ray-object intersections,
+  it would still take <code>O(n)</code> time to loop through all <code>n</code>
+  objects and test them against the ray. This can be improved significantly to
+  <code>O(log n)</code> time, which is a speedup by a factor of 100,000x or more
+  in practice, depending on the scene. To do this, we can use what are typically
+  called ray tracing acceleration structures, which are spatial data structures
+  that help optimize ray traversal performance.
+</p>
+<p>
+  Here, we will use a
+  <a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">
+    bounding volume hierarchy (BVH)</a>,
+  which is a tree structure that partitions all the shapes in the scene into disjoint groups
+  of objects, whose bounding boxes may overlap. The ray then only needs to traverse the
+  subset of objects within the bounding boxes that it intersects.
+</p>
+<figure class="text-center">
+  <img src="./images/p2-bvh.png" alt="Bounding volume hierarchy (BVH) visualization.">
+  <figcaption>
+    Bounding volume hierarchy (BVH) visualization. The entire cow is contained
+    within the initial bounding box. The triangles on the cow's head are
+    contained in a descendant, smaller bounding box.
+  </figcaption>
+</figure>
+<p>
+  There are several heuristics that one can choose to do the actual partitioning and
+  construction of the BVH. The approach that is taken here is to split a parent
+  bounding box into two children by the midpoint along the box's longest side.
+  This would help partition space more evenly so that the ray can skip the traversal
+  of more objects on average.
+</p>
+<p>
+  The time to ray trace a 3D scene with 1 ray per pixel is measured in the table below,
+  using both the naive approach (testing every object against the ray) and the
+  BVH accelerated approach. As we can see, the BVH helps render scenes of even hundreds
+  of thousands of triangles within a fraction of a second. Without the BVH, the same
+  scenes can take several minutes for the same result. This difference would be magnified
+  even more as we increase the resolution, the samples per pixel, and the number of objects
+  in the scene.
+</p>
+<table class="text-center mx-auto border-spacing-4">
+  <caption>
+    Time to render various 3D scenes with and without BVH acceleration.
+  </caption>
+  <thead>
+    <tr>
+      <th>Scene</th>
+      <th>Number of Triangles</th>
+      <th>Naive Approach (seconds)</th>
+      <th>BVH Accelerated (seconds)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Teapot</td>
+      <td>2,464</td>
+      <td>9.5083</td>
+      <td>0.0417</td>
+    </tr>
+    <tr>
+      <td>Cow</td>
+      <td>5,856</td>
+      <td>20.0684</td>
+      <td>0.0480</td>
+    </tr>
+    <tr>
+      <td>Bunny</td>
+      <td>33,696</td>
+      <td>99.6719</td>
+      <td>0.0415</td>
+    </tr>
+    <tr>
+      <td>Bench</td>
+      <td>67,808</td>
+      <td>130.8857</td>
+      <td>0.0198</td>
+    </tr>
+    <tr>
+      <td>Dragon</td>
+      <td>105,120</td>
+      <td>328.4802</td>
+      <td>0.0478</td>
+    </tr>
+    <tr>
+      <td>Wall-E</td>
+      <td>240,326</td>
+      <td>(over 10 minutes)</td>
+      <td>0.0705</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  Here are a few of the moderately complex scenes that can now be ray traced
+  with BVH acceleration, using simple surface normal (debug) coloring and 1 ray sample per pixel.
+  Without using an acceleration structure like the BVH, we would not even be able
+  to render some 3D scenes at a decent level of quality and complexity.
+</p>
+<div class="image-grid-3 text-center">
+  <div>
+    <figure>
+      <img src="./images/p2-bunny-cropped.png" alt="BVH accelerated ray traced bunny.">
+      <figcaption>
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="./images/p2-wall-e-cropped.png" alt="BVH accelerated ray traced Wall-E.">
+      <figcaption>
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="./images/p2-dragon-cropped.png" alt="BVH accelerated ray traced dragon.">
+      <figcaption>
+      </figcaption>
+    </figure>
+  </div>
+</div>
 
 <h2 class="text-center">Part 3: Direct Illumination</h2>
 
