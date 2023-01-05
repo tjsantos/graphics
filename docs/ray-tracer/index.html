@@ -42,8 +42,8 @@
 <p>
   Let us first approach the ray generation. We start with an image that we want to create
   in screen space coordinates, i.e. 800 x 600 pixels from a particular viewpoint. Samples are
-  generated for each pixel by generating rays from the camera to the image view plane pixel and
-  transforming to world coordinates, giving us a parametric equation for the ray,
+  generated for each pixel by generating rays from the camera (or our eyes) to the image plane
+  pixel, giving us a parametric equation for the ray,
   <code>r(t) = o + td</code>,
   where <code>o</code> is where the ray originates, <code>d</code> is the direction the ray
   travels, and <code>t</code> is a parameter that varies to make <code>r(t)</code> represent
@@ -161,13 +161,13 @@
   of more objects on average.
 </p>
 <p>
-  The time to ray trace a 3D scene with 1 ray per pixel is measured in the table below,
+  The time to ray trace a 3D scene with 1 ray (sample) per pixel is measured in the table below,
   using both the naive approach (testing every object against the ray) and the
   BVH accelerated approach. As we can see, the BVH helps render scenes of even hundreds
   of thousands of triangles within a fraction of a second. Without the BVH, the same
-  scenes can take several minutes for the same result. This difference would be magnified
-  even more as we increase the resolution, the samples per pixel, and the number of objects
-  in the scene.
+  scenes can take several minutes for the same result. The last measurement in the table below is
+  already a 10,000x speedup! This difference would be felt even more as we increase the size,
+  quality, and complexity of the scene (i.e. resolution, samples per pixel, and number of triangles).
 </p>
 <table class="text-center mx-auto border-spacing-4">
   <caption>
@@ -223,8 +223,8 @@
 <p>
   Here are a few of the moderately complex scenes that can now be ray traced
   with BVH acceleration, using simple surface normal (debug) coloring and 1 ray sample per pixel.
-  Without using an acceleration structure like the BVH, we would not even be able
-  to render some 3D scenes at a decent level of quality and complexity.
+  Without using an acceleration structure, we would not be able
+  to ray trace some 3D scenes with decent quality in a reasonable amount of time.
 </p>
 <div class="image-grid-3 text-center">
   <div>
@@ -250,11 +250,88 @@
   </div>
 </div>
 
-<h2 class="text-center">Part 3: Direct Illumination</h2>
+<h2 class="text-center">Part 3: Direct and Global Illumination</h2>
+<p>
+  To complete the rendering, we must calculate the light reflecting off the surface in
+  the direction of the viewing ray. This will depend on the properties of the material
+  and position/orientation relative to light sources. We can also make
+  a distinction between direct light sources and indirect lighting, which incorporates
+  light bouncing from other surfaces instead of just the light source. We can
+  perform all of these calculations to make a physically-based renderer by implementing
+  a method called
+  <a href="https://en.wikipedia.org/wiki/Path_tracing">
+    path tracing</a>.
+</p>
+<p>
+  Here are some renderings of 3D scenes path traced for global illumination!
+  This is the
+  <a href="https://faculty.cc.gatech.edu/~turk/bunny/bunny.html">
+    Stanford Bunny</a>
+  in the
+  <a href="https://en.wikipedia.org/wiki/Cornell_box">
+    Cornell Box</a>.
+</p>
+<div class="image-grid-3 text-center">
+  <div>
+    <figure>
+      <img src="./images/p4-bunny-direct.png" alt="Directly lighted bunny.">
+      <figcaption>
+        Direct lighting. <br>(Only light sources and one bounce of light.)
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="./images/p4-bunny-indirect.png" alt="Indirectly lighted bunny.">
+      <figcaption>
+        Indirect lighting. <br>(Only two or more bounces of light.)
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="./images/p4-bunny-global.png" alt="Globally illuminated bunny.">
+      <figcaption>
+        Global illumination. <br>(Direct and indirect lighting.)
+      </figcaption>
+    </figure>
+  </div>
+</div>
+<p>
+  Here is another example.
+</p>
+<div class="image-grid-3 text-center">
+  <div>
+    <figure>
+      <img src="./images/p4-spheres-direct.png" alt="Directly lighted spheres.">
+      <figcaption>
+        Direct lighting.
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="./images/p4-spheres-indirect.png" alt="Indirectly lighted spheres.">
+      <figcaption>
+        Indirect lighting.
+      </figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="./images/p4-spheres-global.png" alt="Globally illuminated spheres.">
+      <figcaption>
+        Global illumination.
+      </figcaption>
+    </figure>
+  </div>
+</div>
 
-<h2 class="text-center">Part 4: Global Illumination</h2>
+<!--<h2 class="text-center">Part 3: Direct Illumination</h2>-->
 
-<h2 class="text-center">Part 5: Adaptive Sampling</h2>
+<!--<h2 class="text-center">Part 4: Global Illumination</h2>-->
+
+<!--<h2 class="text-center">Part 5: Adaptive Sampling</h2>-->
 
 
 </main>
